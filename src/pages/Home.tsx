@@ -17,9 +17,9 @@ const initialBuckets: Bucket[]  = [
 
 function Home() {
 
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
 
-    const [ buckets, setBuckets ] = useState<Bucket[]>(initialBuckets);
+    const [ buckets ] = useState<Bucket[]>(initialBuckets);
 
     return (
         <div className="flex flex-row h-screen w-full select-none">
