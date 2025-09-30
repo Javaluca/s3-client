@@ -13,9 +13,10 @@ function Login() {
     e.preventDefault();
     setError('');
 
-    const success = await login(host, accesskey, secretKey);
-    if (!success) {
-      setError('Invalid credentials');
+    try {
+      await login(host, accesskey, secretKey);
+    } catch(error) {
+      setError(error?.message);
     }
   };
 

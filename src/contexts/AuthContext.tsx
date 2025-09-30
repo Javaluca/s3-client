@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, type ReactNode, useContext } from 'react';
 import type { User, AuthContextType } from '../types/auth';
+import { ListBucketsCommand, S3, type ListBucketsCommandOutput } from '@aws-sdk/client-s3';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -10,6 +11,31 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [s3Client, setS3Client] = useState<S3 | null>(null);
+
+  function createS3Client(user: User): S3 {
+    if (!user) {
+      throw new Error('Missing user');
+    }
+    if (!user.host) {
+      throw new Error('Missing s3 host endpoint');
+    }
+    if (!user.accesskey) {
+      throw new Error('Missing access key');
+    }
+    if (!user.secretKey) {
+      throw new Error('Missing secret key');
+    }
+
+    return new S3({
+          endpoint: user.host,
+          credentials: {
+            accessKeyId: user.accesskey,
+            secretAccessKey: user.secretKey
+          },
+          region: 'default'
+        });
+  }
 
   // Simula il controllo del token salvato al caricamento dell'app
   useEffect(() => {
@@ -20,6 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         // Per ora simulo con un utente fake
         const user: User = JSON.parse(infos);
         setUser(user);
+        setS3Client(createS3Client(user));
       }
       setIsLoading(false);
     };
@@ -28,30 +55,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (host: string, accesskey: string, secretkey: string): Promise<boolean> => {
+    /*if (!s3Client) {
+      return false;
+    }*/
     setIsLoading(true);
     
     try {
-      // Simula una chiamata API di login
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Simula credenziali valide
-      if (accesskey === '123' && secretkey === '456') {
-        const user: User = {
-          host: host,
-          accesskey: accesskey,
-          secretKey: secretkey
-        };
 
+      const user: User = {
+        host: host,
+        accesskey: accesskey,
+        secretKey: secretkey
+      };
+
+      const s3: S3 = createS3Client(user);
+
+      setS3Client(s3);
+
+      const output: ListBucketsCommandOutput = await s3.send(new ListBucketsCommand());
+      // Simula credenziali valide
+      if (output) {
         const userJson = JSON.stringify(user);
         setUser(user);
         localStorage.setItem('authinfos', userJson);
         return true;
       } 
 
-      return false;
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
       return false;
     } finally {
       setIsLoading(false);
@@ -67,7 +96,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     login,
     logout,
-    isLoading
+    isLoading,
+    s3Client
   };
 
   return (
