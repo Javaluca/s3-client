@@ -13,25 +13,26 @@ export default function BucketBrowser( { setSelectedBucket }: { setSelectedBucke
     const { s3Client } = useAuth();
 
     useEffect(() => {
-        loadBucket();
+        loadBuckets();
     }, []);
 
-    async function loadBucket() {
+    async function loadBuckets() {
         const bb: ListBucketsCommandOutput | undefined = await s3Client?.listBuckets();
         setBuckets(bb?.Buckets);
     }
 
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 min-h-0 h-full">
             <div className="py-2 px-2 mx-2 bg-gray-800 rounded-2xl flex flex-row align-middle gap-2 focus-within:bg-gray-600">
                 <FontAwesomeIcon icon={faSearch} className="m-1" />
                 <input type="text" placeholder="Search" className="border-0 no-focus bg-transparent w-full h-full border-transparent !outline-none"
                 value={searchText} onChange={e => setSearchText(e.target.value)}/>
             </div>
-            <nav className="grow flex flex-col gap-2 overflow-y-scroll overflow-x-hidden">
+            <nav className="grow flex flex-col gap-1 overflow-y-scroll overflow-x-hidden min-h-0 h-full">
                 {
                     buckets && buckets
                         .filter((b: Bucket) => b.Name?.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
+                        .slice(0, 30)
                         .map((b: Bucket) => (
                         <a key={b.Name} style={{whiteSpace:"nowrap"}} 
                             className="block text-sm py-2.5 px-4 mx-2 font-semibol rounded-lg hover:text-gray-900

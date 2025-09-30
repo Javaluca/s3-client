@@ -16,14 +16,14 @@ function Home() {
 
 
     return (
-        <div className="flex flex-row h-screen w-full select-none">
-            <div className="flex flex-col flex-shrink-0 w-64 h-full">
+        <div className="flex flex-row h-screen max-h-screen w-full select-none">
+            <div className="flex flex-col flex-shrink-0 w-64 h-full min-h-0">
                 <div className="flex-shrink-0 flex flex-row items-center justify-between py-4 px-6 mb-2">
                     <h2 className="text-gray-100 font-extrabold text-center text-xl">
                         S3 <span className="text-transparent bg-clip-text bg-gradient-to-r to-indigo-600 from-violet-400">client</span>
                     </h2>
                 </div>
-                <div className="grow">
+                <div className="flex-1">
                     <BucketBrowser setSelectedBucket={setSelectedBucket}></BucketBrowser> 
                 </div>
                 <div>

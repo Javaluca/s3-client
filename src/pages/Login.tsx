@@ -15,8 +15,9 @@ function Login() {
 
     try {
       await login(host, accesskey, secretKey);
-    } catch(error) {
-      setError(error?.message);
+    } catch(error: unknown) {
+      const known = error as { message: string };
+      setError(known.message);
     }
   };
 
