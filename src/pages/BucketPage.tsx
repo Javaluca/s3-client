@@ -1,9 +1,9 @@
-import { paginateListDirectoryBuckets, paginateListObjectsV2, type _Object, type Bucket, type CommonPrefix, type ListObjectsCommandOutput } from "@aws-sdk/client-s3";
+import { paginateListObjectsV2, type _Object, type Bucket, type CommonPrefix } from "@aws-sdk/client-s3";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
-import { useClickOutside } from "../hooks/ClickOutside";
 import { useAuth } from "../contexts/AuthContext";
+import { useClickOutside } from "../hooks/ClickOutside";
 
 export default function BucketPage( { bucket }: { bucket: Bucket } ) {
 
