@@ -33,7 +33,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             accessKeyId: user.accesskey,
             secretAccessKey: user.secretKey
           },
-          region: 'default'
+          region: 'us-east-1',
+          forcePathStyle: true
         });
   }
 

@@ -9,11 +9,7 @@ import BucketPage from "./BucketPage";
 
 function Home() {
 
-
-
     const [selectedBucket, setSelectedBucket ] = useState<Bucket>();
-
-
 
     return (
         <div className="flex flex-row h-screen max-h-screen w-full select-none">
@@ -32,7 +28,7 @@ function Home() {
             </div>
             
             <div className="grow bg-gray-100">
-                { selectedBucket && <BucketPage bucket={selectedBucket}></BucketPage>}
+                { selectedBucket && <BucketPage key={selectedBucket.Name} bucket={selectedBucket}></BucketPage> || <div>Seleziona un bucket</div>}
             </div>
         </div>
     )
